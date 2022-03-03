@@ -1,6 +1,6 @@
 /*
 
-	SZÁNDÉKOSAN ZÁRÓDIK BE 5 NEXT UTÁN HOGY NE KELLJEN KONZOLLAL KILÉPNI, remélem ez nem nagy baj mostmár nem törlöm ki hogy megcsináltam, a break-et
+	SZÁNDÉKOSAN ZÁRÓDIK BE 8 NEXT UTÁN HOGY NE KELLJEN KONZOLLAL KILÉPNI, remélem ez nem nagy baj mostmár nem törlöm ki hogy megcsináltam, a break-et
 	commentelve nem fog bezáródni, meg van csinálva hogy a végtelenségig menjen
 
     g++ main.cpp Graph.cpp Window.cpp GUI.cpp Simple_window.cpp -o main `fltk-config --ldflags --use-images`
@@ -79,21 +79,29 @@ int main()
 	win.attach(bonfire4);
 
 	int current=0;
-	int max = 6; //after 5 "Next" clicks the program terminates so the poor user doesn't get stuck, it's intentional
+	int max = 9; //after 8 "Next" clicks the program terminates so the poor user doesn't get stuck, it's intentional
 	
 	int random = (rand()%8)*100, random2 = (rand()%8)*100;
 	
 	while (random==700 && random2==100) //if these are the coordinates then the next button becomes unclickable and the user gets stuck
-	{random = (rand()%8)*100, random2 = (rand()%8)*100;} //so I do a new random if it happens
+	{random = (rand()%8)*100, random2 = (rand()%8)*100;
+		if(random!=700 || random2!=100)
+			break;
+
+	} //so I do a new random if it happens
 	
 	while(true){
 		
 		Image cat{Point{random,random2},"cat.gif"};
 		
 		random=(rand()%8)*100, random2= (rand()%8)*100;
-		
-		while (random==700 && random2==100) //same as before these coordinates would be a problem
-		{random = (rand()%8)*100, random2 = (rand()%8)*100;}
+
+	while (random==700 && random2==100) //if these are the coordinates then the next button becomes unclickable and the user gets stuck
+	{random = (rand()%8)*100, random2 = (rand()%8)*100;
+		if(random!=700 || random2!=100)
+			break;
+
+	} //so I do a new random if it happens
 		
 		win.attach(cat);
 		
@@ -103,7 +111,5 @@ int main()
 		
 		win.wait_for_button();
 	}
-
-    win.wait_for_button();
 
 }
