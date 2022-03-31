@@ -35,8 +35,6 @@ void read_val(T& v)
 
 int main()
 {
-    using namespace std;
-
     S<int> si {2};
     cout << "The integer: "<<endl;
     cout << si.get()<<endl;
