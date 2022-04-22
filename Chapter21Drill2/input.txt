@@ -1,0 +1,10 @@
+car 25 67.51
+plane 53 42.14
+ship 12 124.39
+submarine 91 15.22
+orange 42 67.47
+anvil 91 2.45
+hammer 3 62.71
+phone 6 500.32
+chair 15 298.73
+rocket 21 47.93
