@@ -1,68 +1,130 @@
-/*
-    g++ main.cpp Graph.cpp Window.cpp GUI.cpp Simple_window.cpp -o main `fltk-config --ldflags --use-images`
+//g++ main.cpp -o main
+//This one had to be labeled it was too big and I didn't use the library always used  
+//(I probably should have asked if its even allowed)
 
-    
-*/
-#include "Graph.h"
+#include <iostream>
+#include <string>
+#include <vector>
+#include <fstream>
+#include <list>
+#include <algorithm>
 
-struct Item { 
-	string name; 
-	int iid;
-	double value;
-	};
-/* this made everything even worse.
-struct name 
-{
-	bool operator()(const string & x, const string & y) const t
-	{
-		for (int i =0; i<x.length(); i++)
-		{
-.
-		}
-	}
+// 1
+struct Item {
+    std::string name;
+    int iid;
+    double value;
 };
-*/
-struct iid {
 
-	};
+std::ostream& operator<<(std::ostream& out, const Item& it)
+{
+    return out << it.name << '\t'
+              << it.iid << '\t'
+              << it.value;
+}
 
-struct value {
+std::istream& operator>>(std::istream& in, Item& it)
+{
+    std::string ss;
+    int ii;
+    double dd;
+    in >> ss >> ii >> dd;
+    Item itt {ss, ii, dd};
+    it = itt;
+    return in;
+}
 
-	};
+// 4 (the others were done without this)
+struct by_val { 
+    bool operator()(const Item& x, const Item& y)
+    {
+        return x.value > y.value;
+    }
+};
+
+// 6
+class by_name {
+    std::string name;
+public:
+    by_name(const std::string& nn) : name{nn} { }
+    bool operator()(const Item& x) const { return x.name == name; }
+};
+
+// 7
+class by_iid {
+    int iid;
+public:
+    by_iid(int id) : iid{id} { }
+    bool operator()(const Item& x) const { return x.iid == iid; }
+};
+
+template<typename T>
+void print(const T& t, char br = ' ')
+{
+    for (const auto& x : t)
+        std::cout << x << br;
+    std::cout << std::endl;
+}
 
 int main()
 {
+    // 1
+    const std::string input {"input.txt"};
 
-    using namespace Graph_lib;
+    std::ifstream ifs {input};
 
-	string from;
-	cin >> from;
-	ifstream is {from};
-	istream_iterator<Item> ii {is};
-    Vector<Item> vi {ii};
-    
-    void sort(Vector <Item> & vi) 
-    {
-    	sort(vi.begin(),vi.end());
-    }
+    std::vector<Item> vi;
+    for (Item ii; ifs >> ii; )
+        vi.push_back(ii);
 
-    //WIP doesn't say insert into where so I'm going to assume that its the end of the vector
-    iterator p = vi.begin(); 
-    for (int i=0; i <vi.lenght(); i++)
-    	{
-    		p++;
-    	}
-    p=vi.insert(p,Item("horse shoe",99,12.34));
+    // 2
+    std::sort(vi.begin(), vi.end(),
+            [](const Item& x, const Item& y) { return x.name < y.name; });
 
-    //WIP same here so the vector is 12 now
-    iterator p2 = vi.begin();
+    // 3
+    std::sort(vi.begin(), vi.end(),
+            [](const Item& x, const Item& y) { return x.iid < y.iid; });
 
-    for (int i=0; i <vi.lenght(); i++)
-    	{
-    		p2++;
-    	}
+    // 4
+    std::sort(vi.begin(), vi.end(), by_val());
 
-    p2=vi.insert(p2,ItemItem("Canon S400", 9988,499.95));
+    // 5. does not say where to put it so i will use push back
+    Item tmp {"horse shoe", 99, 1.34};
+    vi.push_back (tmp);
+
+    tmp = Item{"canon S400", 9988, 499.95};
+    vi.push_back(tmp);
+
+    // 6
+    vi.erase(std::find_if(vi.begin(),vi.end(),by_name("water")));
+    vi.erase(std::find_if(vi.begin(),vi.end(),by_name("chair")));
+
+    // 7
+    vi.erase(std::find_if(vi.begin(),vi.end(),by_iid(91)));
+    vi.erase(std::find_if(vi.begin(),vi.end(),by_iid(21)));
+
+    // 8
+    std::list<Item> l (vi.size());
+    std::copy(vi.begin(), vi.end(), l.begin());
+
+    print(l, '\n');
+
+    l.sort([](const Item& x, const Item& y) { return x.name < y.name; });
+    l.sort([](const Item& x, const Item& y) { return x.iid < y.iid; });
+    l.sort([](const Item& x, const Item& y) { return x.value > y.value; });
+
+    tmp = {"horse", 99, 1.34};
+    l.push_back (tmp);
+
+    tmp = {"canon", 9988, 499.95};
+    l.push_back (tmp);
+
+    l.erase(std::find_if(l.begin(), l.end(), by_name("ship")));
+    l.erase(std::find_if(l.begin(), l.end(), by_name("phone")));
+    l.erase(std::find_if(l.begin(), l.end(), by_iid(25)));
+    l.erase(std::find_if(l.begin(), l.end(), by_iid(91)));
+
+    print(l, '\n');
 
     return 0;
 }
